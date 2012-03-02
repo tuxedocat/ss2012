@@ -1,11 +1,7 @@
 # coding: utf-8
 
 import nltk
-from nltk.tag import pos_tag as tagger
-from nltk.classify import maxent
 import re
-import timeit
-import random
 import cPickle as pickle
 
 
@@ -52,7 +48,9 @@ def add_annotation(sentence):
             sent_dict["rawtext"] = sentence
             for n, dic in enumerate(correction_pairs):
                 i = dic["i"]
+                counter(sentence,i)
                 c = dic["c"]
+                counter(sentence,c)
                 if not "correction_pair" in sent_dict and (i in PREPS and c in PREPS):
                     sent_dict["correction_pair"] = (dic["i"],dic["c"]) 
                 else:
@@ -63,6 +61,12 @@ def add_annotation(sentence):
             return sent_dict
         except TypeError:
             pass 
+    else:
+        pass
+
+def counter(sentence, word):
+    if sentence.count(" "+word+" ") > 1:
+        raise TypeError
     else:
         pass
 
