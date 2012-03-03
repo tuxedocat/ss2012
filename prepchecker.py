@@ -7,21 +7,20 @@ import classifier
 class PrepChecker(object):
     def __init__(self, path):
         from nltk.tag import pos_tag as tagger
-        from nltk import word_tokenize as tokenizer
         self.PREPS = ["in", "for", "at", "on", "of", "about", "with", "from", "by", "as", "into"]
         self.PREPTAGS = ["IN"]
         with open(path, "rb") as pkl:
             self.corpus = pickle.load(pkl)[0:10]
-        self.trainingdata = [dic["gold"] for dic in self.corpus]
-        self.testdata = [dic["test"] for dic in self.corpus]
+        self.training_words = [dic["gold_words"] for dic in self.corpus]
+        self.test_words = [dic["test_words"] for dic in self.corpus]
         self.correctionpairs = [dic["correction_pair"] for dic in self.corpus]
-        self.postagged_testdata = self._postag(tokenizer, tagger, self.testdata)
-        self.postagged_trainingdata = self._postag(tokenizer, tagger, self.trainingdata)
+        self.postagged_testdata = self._postag(tagger, self.test_words)
+        self.postagged_trainingdata = self._postag(tagger, self.training_words)
         self.features = []
         self.labellist = [dic["correction_pair"][1] for dic in self.corpus]
 
-    def _postag(self, tokenizer, tagger, datalist): 
-        return [tagger(tokenizer(sent)) for sent in datalist]
+    def _postag(self, tagger, datalist): 
+        return [tagger(sent) for sent in datalist]
 
 
     def featureextractor(self, postagged_sents):
