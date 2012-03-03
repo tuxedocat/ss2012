@@ -19,28 +19,22 @@ class PrepChecker(object):
         self.correction_pairs = [dic["correction_pair"] for dic in self.corpus]
         self.labellist = [dic["correction_pair"][1] for dic in self.corpus]
         self.ppindexlist = [dic["ppindex"] for dic in self.corpus]
-<<<<<<< HEAD
-=======
         self.packeddata = zip(self.training_words, self.test_words,
                               self.ppindexlist, self.labellist, self.correction_pairs)
->>>>>>> test
 
-
-<<<<<<< HEAD
 
     def makefeatures(self, postagged_sents_list): 
         for postagged_sent, ppindex in zip(postagged_sents_list, self.ppindexlist):
             fe = FeatureExtractor(postagged_sent, ppindex, "pos", "ngram")
             self.features.append(fe.features())
 
-=======
+
     def makefeatures(self, sents_list): 
         _features = []
         for sent, ppindex in zip(sents_list, self.ppindexlist):
             fe = FeatureExtractor(sent, ppindex, "pos", "ngram")
             _features.append(fe.features())
         return _features
->>>>>>> test
 
 
     def train(self):
@@ -68,15 +62,10 @@ class PrepChecker(object):
 
 def main():
     pc = PrepChecker("packedcorpus.pkl")
-<<<<<<< HEAD
-    pc.makefeatures(pc.postagged_trainingdata)
-    print pc.features
-    print pc.labellist
-=======
     pc.train()
     pc.test() 
 
->>>>>>> test
+
 
 
 if __name__=="__main__":

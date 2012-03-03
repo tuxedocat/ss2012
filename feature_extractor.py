@@ -6,16 +6,16 @@ class FeatureExtractor(object):
 <<<<<<< HEAD
     def __init__(self, postagged_sent, ppindex, *ARGS):
         self.sents = postagged_sent
-=======
+
     def __init__(self, sent, ppindex, *ARGS):
         self.sent = sent
->>>>>>> test
+
         self.PREPS = ["in", "for", "at", "on", "of", "about", "with", "from", "by", "as", "into"]
         self.PPTAG = ["IN"]
         self.ppindex = ppindex
         self.ARGS = ARGS
         self.featuredict = {}
-<<<<<<< HEAD
+
 
 
     def features(self):
@@ -32,7 +32,7 @@ class FeatureExtractor(object):
                 self.featuredict.update(_ngramfeature())
         finally:
             return self.featuredict
-=======
+
         self.n = 2
         self.tagger = nltk.pos_tag
 
@@ -64,4 +64,4 @@ class FeatureExtractor(object):
         finally:
             return self.featuredict
 
->>>>>>> test
+
