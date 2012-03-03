@@ -23,12 +23,6 @@ class PrepChecker(object):
                               self.ppindexlist, self.labellist, self.correction_pairs)
 
 
-    def makefeatures(self, postagged_sents_list): 
-        for postagged_sent, ppindex in zip(postagged_sents_list, self.ppindexlist):
-            fe = FeatureExtractor(postagged_sent, ppindex, "pos", "ngram")
-            self.features.append(fe.features())
-
-
     def makefeatures(self, sents_list): 
         _features = []
         for sent, ppindex in zip(sents_list, self.ppindexlist):
