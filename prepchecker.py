@@ -13,7 +13,7 @@ class PrepChecker(object):
         self.PREPS = ["in", "for", "at", "on", "of", "about", "with", "from", "by", "as", "into"]
         self.PREPTAGS = ["IN"]
         with open(path, "rb") as pkl:
-            self.corpus = pickle.load(pkl)[:20]
+            self.corpus = pickle.load(pkl)[:200]
         self.training_words = [dic["gold_words"] for dic in self.corpus]
         self.test_words = [dic["test_words"] for dic in self.corpus]
         self.correction_pairs = [dic["correction_pair"] for dic in self.corpus]
@@ -32,8 +32,8 @@ class PrepChecker(object):
 
 
     def train(self):
-        trainset_features = self.makefeatures(self.training_words[:10])
-        trainset_labels = self.labellist[:10]
+        trainset_features = self.makefeatures(self.training_words[:100])
+        trainset_labels = self.labellist[:100]
         trainset = zip(trainset_features, trainset_labels)
         classifier = nltk.MaxentClassifier.train(trainset, max_iter=3)
         self.classifier = classifier
@@ -42,8 +42,8 @@ class PrepChecker(object):
 
 
     def test(self):
-        testset_features = self.makefeatures(self.test_words[:10])
-        testset_labels = self.labellist[:10]
+        testset_features = self.makefeatures(self.test_words[100:])
+        testset_labels = self.labellist[100:]
         testset = zip(testset_features, testset_labels)
         classifier = self.classifier
         print nltk.classify.accuracy(classifier, testset)
