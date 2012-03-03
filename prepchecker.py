@@ -13,14 +13,9 @@ class PrepChecker(object):
         self.PREPS = ["in", "for", "at", "on", "of", "about", "with", "from", "by", "as", "into"]
         self.PREPTAGS = ["IN"]
         with open(path, "rb") as pkl:
-            self.corpus = pickle.load(pkl)[0:10]
             self.corpus = pickle.load(pkl)[:20]
         self.training_words = [dic["gold_words"] for dic in self.corpus]
         self.test_words = [dic["test_words"] for dic in self.corpus]
-        self.correctionpairs = [dic["correction_pair"] for dic in self.corpus]
-        self.postagged_testdata = self._postag(tagger, self.test_words)
-        self.postagged_trainingdata = self._postag(tagger, self.training_words)
-        self.features = []
         self.correction_pairs = [dic["correction_pair"] for dic in self.corpus]
         self.labellist = [dic["correction_pair"][1] for dic in self.corpus]
         self.ppindexlist = [dic["ppindex"] for dic in self.corpus]
@@ -30,9 +25,8 @@ class PrepChecker(object):
                               self.ppindexlist, self.labellist, self.correction_pairs)
 >>>>>>> test
 
-    def _postag(self, tagger, datalist): 
-        return [tagger(sent) for sent in datalist]
 
+<<<<<<< HEAD
 
     def makefeatures(self, postagged_sents_list): 
         for postagged_sent, ppindex in zip(postagged_sents_list, self.ppindexlist):
@@ -74,6 +68,7 @@ class PrepChecker(object):
 
 def main():
     pc = PrepChecker("packedcorpus.pkl")
+<<<<<<< HEAD
     pc.makefeatures(pc.postagged_trainingdata)
     print pc.features
     print pc.labellist
