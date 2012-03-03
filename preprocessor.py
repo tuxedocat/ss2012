@@ -3,6 +3,7 @@
 import nltk
 import re
 import cPickle as pickle
+from nltk import word_tokenize as tokenizer
 
 
 def read_corpus(path):
@@ -48,21 +49,40 @@ def add_annotation(sentence):
             sent_dict["rawtext"] = sentence
             for n, dic in enumerate(correction_pairs):
                 i = dic["i"]
-                counter(sentence,i)
+                # counter(sentence,i)
                 c = dic["c"]
-                counter(sentence,c)
+                # counter(sentence,c)
                 if not "correction_pair" in sent_dict and (i in PREPS and c in PREPS):
                     sent_dict["correction_pair"] = (dic["i"],dic["c"]) 
                 else:
                     raise TypeError
-            incorrectsent, goldsent = remove_tags(sentence, correction_pairs)
-            sent_dict["test"] = incorrectsent
-            sent_dict["gold"] = goldsent
+            testsent, goldsent = remove_tags(sentence, correction_pairs)
+            try:
+                ppindex,test_words, gold_words = ppindexer(testsent, goldsent, PREPS)
+                sent_dict["test"] = testsent
+                sent_dict["gold"] = goldsent
+                sent_dict["ppindex"] = ppindex
+                sent_dict["test_words"] = test_words
+                sent_dict["gold_words"] = gold_words
+            except:
+                raise TypeError
             return sent_dict
         except TypeError:
             pass 
     else:
         pass
+
+def ppindexer(test, gold, PREPS):
+    ppindex = -100
+    test_words = tokenizer(test)
+    gold_words = tokenizer(gold)
+    assert len(test_words) == len(gold_words)
+    for i, pair in enumerate(zip(test_words, gold_words)):
+        if not (pair[0] == pair[1]) and (pair[0] in PREPS and pair[1] in PREPS) :
+            ppindex = i
+        else:
+            pass
+    return ppindex, test_words, gold_words
 
 def counter(sentence, word):
     if sentence.count(" "+word+" ") > 1:
@@ -98,14 +118,13 @@ def remove_tags(sentence, correction_pairs):
 def main():
     path = "wdiff_prep"
     corpus = read_corpus(path)
-    for item in corpus:
-        print item
+    print corpus[:10]
     print "Num. of sentences:", len(corpus)
     with open("packedcorpus.pkl", "wb") as pkl_s:
         pickle.dump(corpus, pkl_s)
     with open("packedcorpus.pkl", "rb") as pkl_l:
         dbg = pickle.load(pkl_l)
-    print len(dbg)
+    print "Num. of sentences unpickled (debug):", len(dbg)
 
 if __name__=="__main__":
     main()
