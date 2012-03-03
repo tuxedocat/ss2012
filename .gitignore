@@ -1,3 +1,8 @@
 *.pyc
 *.pkl
 code/
+prep.xml.corr
+prep.xml.inco
+rt_prep.corr
+rt_prep.xml
+rt_prep.inco
