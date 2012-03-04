@@ -1,5 +1,9 @@
 # ss2012: Python/NLTKでつくる英語前置詞誤り訂正器
 ##中身
+###ss2012_slide
+* 説明用スライド(途中)
+* Keynote… そのうちPowerpointへ変換します
+
 ###wdiff_prep
 CLC-FCEデータセットから得た訂正情報をwdiffの形式で付与したもの．
 1パラグラフ1行．
