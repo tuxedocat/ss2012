@@ -18,6 +18,7 @@ CLC-FCEデータセットから得た訂正情報をwdiffの形式で付与し�
 ###feature_extractor.py
 * class FeatureExtractor
 * nltk.word_tokenize によって単語単位のリスト化された文に対して素性抽出をおこない，素性集合(dict)を返す．
+
 ####素性
 * ngram: 前後数単語の表層形(lemmatizeなし)
 * posngram: それらの品詞(nltk.pos_tagによる,TreeBank形式のタグセット)
