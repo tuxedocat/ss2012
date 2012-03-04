@@ -10,7 +10,7 @@ class FeatureExtractor(object):
         self.ppindex = ppindex
         self.ARGS = ARGS
         self.featuredict = {}
-        self.n = 4
+        self.n = 2 
         self.tagger = nltk.pos_tag
 
 

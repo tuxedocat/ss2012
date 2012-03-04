@@ -48,6 +48,7 @@ class PrepChecker(object):
         testset = zip(testset_features, testset_labels)
         classifier = self.classifier
         print "Accuracy on the test set:", nltk.classify.accuracy(classifier, testset)
+        print "Most informative features:\n", classifier.show_most_informative_features(n=20)
         for testcase in testset_features:
             classifier_out = classifier.classify(testcase)
             classifier_outputs.append(classifier_out)
