@@ -2,8 +2,6 @@
 import nltk
 import cPickle as pickle
 import time
-import classifier
-from nltk.tag import pos_tag as tagger
 from feature_extractor import FeatureExtractor
 
 
@@ -76,14 +74,13 @@ class PrepChecker(object):
         testset_features = self.makefeatures(self.test_words[1400:])
         testset_labels = self.labellist[1400:]
         testset = zip(testset_features, testset_labels)
-        classifier = self.classifier
         print "Accuracy on the test set:", nltk.classify.accuracy(classifier, testset)
-        print "Most informative features:\n", classifier.show_most_informative_features(n=20)
+        print "Most informative features:\n", self.classifier.show_most_informative_features(n=20)
         for testcase in testset_features:
-            classifier_out = classifier.classify(testcase)
+            classifier_out = self.classifier.classify(testcase)
             classifier_outputs.append(classifier_out)
-        cm = nltk.ConfusionMatrix(testset_labels, classifier_outputs)
-        print cm
+        self.cm = nltk.ConfusionMatrix(testset_labels, classifier_outputs)
+        print self.cm
 
 
     def stat(self):
