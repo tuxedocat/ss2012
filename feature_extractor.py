@@ -2,7 +2,16 @@
 import nltk
 from nltk import pos_tag
 
+
 class FeatureExtractor(object):
+    """
+    素性抽出関数
+
+    nltk.pos_tagをngram pos featureで使用
+    
+    TODO
+        implement more sophisticated features
+    """
     def __init__(self, sent, ppindex, *ARGS):
         self.sent = sent
         self.PREPS = ["in", "for", "at", "on", "of", "about", "with", "from", "by", "as", "into"]

@@ -7,8 +7,30 @@ from nltk.tag import pos_tag as tagger
 from feature_extractor import FeatureExtractor
 
 
-
 class PrepChecker(object):
+    """
+    前置詞誤り訂正器本体
+    
+    VARIABLES
+        training_words  : dict型のコーパスの"gold"キーの値をリスト化したもの(要素は単語分割された文のリスト)
+        test_words      : "test_words"の値をリスト化したもの(上記と同様)
+        correction_pairs: "correction_pairs"の値をリスト化したもの(要素はtuple)
+        labellist       : correction_pairから得た正解ラベルのリスト
+        ppindexlist     : 単語分割されたリスト中での前置詞誤り箇所のリスト(誤りは特定済みだという問題設定のため)
+        packeddata      : 文順序をシャッフルしても良いようにとtuple に詰めたもの (現在未使用)
+    METHODS
+        __init__(path)      : path = カレントディレクトリの"packedcorpus.pkl"
+        makefeature(sent)   : FeatureExtractorクラスで素性抽出する
+                              sent は単語分割された文のリスト
+        train()             : nltk.MaxentClassifierを学習させる
+        test()              : テストセットに対して評価(accuracy)を行い正解ラベルとの混同行列を出力する
+
+    TODO
+        * train(), test() should handle various amount of training and test dataset
+        * make classifier work with scipy's faster MaxEnt implementation
+
+    """
+
     def __init__(self, path):
         self.PREPS = ["in", "for", "at", "on", "of", "about", "with", "from", "by", "as", "into"]
         self.PREPTAGS = ["IN"]
@@ -23,7 +45,13 @@ class PrepChecker(object):
                               self.ppindexlist, self.labellist, self.correction_pairs)
 
 
-    def makefeatures(self, sents_list): 
+    def makefeatures(self, sents_list):
+        """
+        ARGS
+            sent_list: [[s1word1,s1word2,...], [s2word1,s2word2,...],...]
+        RETURNS
+            _features: a list of feature set (dict)
+        """
         _features = []
         for sent, ppindex in zip(sents_list, self.ppindexlist):
             fe = FeatureExtractor(sent, ppindex, "pos", "ngram")
@@ -38,10 +66,12 @@ class PrepChecker(object):
         classifier = nltk.MaxentClassifier.train(trainset, algorithm="IIS", max_iter=20)
         self.classifier = classifier
 
-        pass
-
 
     def test(self):
+        """
+        TODO
+            output logfile and confusion matrix for debugging
+        """
         classifier_outputs = []
         testset_features = self.makefeatures(self.test_words[1400:])
         testset_labels = self.labellist[1400:]
@@ -54,10 +84,8 @@ class PrepChecker(object):
             classifier_outputs.append(classifier_out)
         cm = nltk.ConfusionMatrix(testset_labels, classifier_outputs)
         print cm
-        pass
 
 
-    
     def stat(self):
         pass
 
