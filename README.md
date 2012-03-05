@@ -2,7 +2,7 @@
 ##中身
 ###ss2012_slide
 * 説明用スライド(途中)
-* Keynote… そのうちPowerpointへ変換します
+* pptx形式が最新版です
 
 ###wdiff_prep
 CLC-FCEデータセットから得た訂正情報をwdiffの形式で付与したもの．
