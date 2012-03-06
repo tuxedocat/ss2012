@@ -2,6 +2,7 @@
 import nltk
 import cPickle as pickle
 import time
+import random
 from feature_extractor import FeatureExtractor
 
 
@@ -10,7 +11,7 @@ class PrepChecker(object):
     前置詞誤り訂正器本体
     
     VARIABLES
-        training_words  : dict型のコーパスの"gold"キーの値をリスト化したもの(要素は単語分割された文のリスト)
+        gold_words  : dict型のコーパスの"gold"キーの値をリスト化したもの(要素は単語分割された文のリスト)
         test_words      : "test_words"の値をリスト化したもの(上記と同様)
         correction_pairs: "correction_pairs"の値をリスト化したもの(要素はtuple)
         labellist       : correction_pairから得た正解ラベルのリスト
@@ -32,14 +33,19 @@ class PrepChecker(object):
     def __init__(self, path):
         with open(path, "rb") as pkl:
             self.corpus = pickle.load(pkl)
-        self.training_words = [dic["gold_words"] for dic in self.corpus]
-        self.test_words = [dic["test_words"] for dic in self.corpus]
-        self.correction_pairs = [dic["correctionpair"] for dic in self.corpus]
-        self.labellist = [dic["correctionpair"][1] for dic in self.corpus]
-        self.ppindexlist = [dic["ppindex"] for dic in self.corpus]
-        self.packeddata = zip(self.training_words, self.test_words,
-                              self.ppindexlist, self.labellist, self.correction_pairs)
-        self.rawsentences = [dic["rawtext"] for dic in self.corpus]
+        gold_words = [dic["gold_words"] for dic in self.corpus]
+        test_words = [dic["test_words"] for dic in self.corpus]
+        corr_pairs = [dic["correctionpair"] for dic in self.corpus]
+        labellist = [dic["correctionpair"][1] for dic in self.corpus]
+        ppindexlist = [dic["ppindex"] for dic in self.corpus]
+        rawsents = [dic["rawtext"] for dic in self.corpus]
+        self.packeddata = zip(gold_words, test_words, ppindexlist, labellist, corr_pairs, rawsents)
+        random.shuffle(self.packeddata)
+        self.gold_words = [t[0] for t in self.packeddata]
+        self.test_words = [t[1] for t in self.packeddata]
+        self.ppindexlist = [t[2] for t in self.packeddata]
+        self.labellist = [t[3] for t in self.packeddata]
+        self.rawsentences = [t[5] for t in self.packeddata]
 
 
     def makefeatures(self, sents_list):
@@ -57,7 +63,7 @@ class PrepChecker(object):
 
 
     def train(self, numexamples = 1400, numiter = 20):
-        trainset_features = self.makefeatures(self.training_words[:numexamples])
+        trainset_features = self.makefeatures(self.gold_words[:numexamples])
         trainset_labels = self.labellist[:numexamples]
         trainset = zip(trainset_features, trainset_labels)
         classifier = nltk.MaxentClassifier.train(trainset, algorithm="IIS", max_iter=numiter)
