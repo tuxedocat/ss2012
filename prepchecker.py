@@ -85,7 +85,7 @@ class PrepChecker(object):
         print "Accuracy on the test set:", nltk.classify.accuracy(self.classifier, testset)
         print "Most informative features:\n", self.classifier.show_most_informative_features(n=10)
         classifier_outputs = [self.classifier.classify(test) for test in testset_features]
-        self.failedcases = [testset_rawsents[i] for i,w 
+        self.failedcases = [(testset_features[i], testset_rawsents[i]) for i,w 
                             in enumerate(zip(testset_labels, classifier_outputs))
                             if w[0] != w[1] ]
         self.cm = nltk.ConfusionMatrix(testset_labels, classifier_outputs)
@@ -96,8 +96,10 @@ class PrepChecker(object):
     def log(self, filename):
         with open(filename, "w") as logfile:
             logfile.write("FAILED CASES:\n")
-            for item in self.failedcases:
-                logfile.write(item+"\n")
+            for features, sent in self.failedcases:
+                logfile.write(sent+"\n")
+                logfile.write(str(features))
+                logfile.write("\n\n")
 
 def main():
     st = time.time()
