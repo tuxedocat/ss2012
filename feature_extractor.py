@@ -29,7 +29,7 @@ class FeatureExtractor(object):
             ngrams = [(index - self.ppindex, word) for index, word in enumerate(self.sent) 
                         if index != self.ppindex and index >= self.ppindex - n]
             for i, word in ngrams:
-                _feature.update({"%d-gram(%d)_%s"%(n, i, word): 1})
+                _feature.update({"%d-gram(%d)_%s"%(n*2+1, i, word): 1})
             return _feature
 
         def _ngramposfeature(n = 2):
@@ -38,7 +38,7 @@ class FeatureExtractor(object):
             posngrams = [(index - self.ppindex, t[1]) for index, t in enumerate(taggedsent) 
                         if index != self.ppindex and index >= self.ppindex - n]
             for i, word in posngrams:
-                _feature.update({"POS_%d-gram(%d)_%s"%(n, i, word): 1})
+                _feature.update({"POS_%d-gram(%d)_%s"%(n*2+1, i, word): 1})
             return _feature
 
         try:

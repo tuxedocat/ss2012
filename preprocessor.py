@@ -46,24 +46,25 @@ def add_annotation(sentence):
     correction_pairs = [m.groupdict() for m in pattern.finditer(sentence)]
     if correction_pairs:
         try:
-            sent_dict["rawtext"] = sentence
+            #sent_dict["rawtext"] = sentence
             for n, dic in enumerate(correction_pairs):
                 i = dic["i"]
-                # counter(sentence,i)
                 c = dic["c"]
-                # counter(sentence,c)
                 if not "correction_pair" in sent_dict and (i in PREPS and c in PREPS):
-                    sent_dict["correction_pair"] = (dic["i"],dic["c"]) 
+                    pass
+                    #sent_dict["correction_pair"] = (dic["i"],dic["c"]) 
                 else:
                     raise TypeError
             testsent, goldsent = remove_tags(sentence, correction_pairs)
             try:
-                ppindex,test_words, gold_words = ppindexer(testsent, goldsent, PREPS)
+                ppindex,test_words, gold_words, correctionpair = ppindexer(testsent, goldsent, PREPS)
                 sent_dict["test"] = testsent
                 sent_dict["gold"] = goldsent
                 sent_dict["ppindex"] = ppindex
                 sent_dict["test_words"] = test_words
                 sent_dict["gold_words"] = gold_words
+                sent_dict["rawtext"] = sentence
+                sent_dict["correctionpair"] = correctionpair
             except:
                 raise TypeError
             return sent_dict
@@ -79,10 +80,11 @@ def ppindexer(test, gold, PREPS):
     assert len(test_words) == len(gold_words)
     for i, pair in enumerate(zip(test_words, gold_words)):
         if not (pair[0] == pair[1]) and (pair[0] in PREPS and pair[1] in PREPS) :
+            correctionpair = (pair[0], pair[1])
             ppindex = i
         else:
             pass
-    return ppindex, test_words, gold_words
+    return ppindex, test_words, gold_words, correctionpair
 
 def counter(sentence, word):
     if sentence.count(" "+word+" ") > 1:
