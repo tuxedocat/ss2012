@@ -24,7 +24,7 @@ test = [
 
 
 #training classifier (example)
-me_classifier =  MaxentClassifier.train(training, algorithm='iis', trace=0, max_iter=1, min_lldelta=0.5)
+me_classifier =  MaxentClassifier.train(training, algorithm='iis', trace=0, max_iter=100, min_lldelta=0.5)
 
 
 #classify the test using the classifier above (example)

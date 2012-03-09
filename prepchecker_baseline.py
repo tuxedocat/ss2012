@@ -49,7 +49,7 @@ class PrepChecker(object):
         """
         _features = []
         for sent, ppindex in zip(sents_list, ppindexlist):
-            fe = FeatureExtractor(sent, ppindex, "succ", "pos", "ngram")
+            fe = FeatureExtractor(sent, ppindex, "succ")
             _features.append(fe.features())
         return _features
 

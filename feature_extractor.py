@@ -41,11 +41,18 @@ class FeatureExtractor(object):
                 _feature.update({"POS_%d-gram(%d)_%s"%(n*2+1, i, word): 1})
             return _feature
 
+        def _succ():
+            _succfeature = {}
+            _succfeature.update({"succ_%s"%(self.sent[self.ppindex + 1]) : 1})
+            return _succfeature
+
         try:
             if "pos" in self.ARGS:
                 self.featuredict.update(_ngramposfeature(self.n))
             if "ngram" in self.ARGS:
                 self.featuredict.update(_ngramfeature(self.n))
+            if "succ" in self.ARGS:
+                self.featuredict.update(_succ())
 
         finally:
             return self.featuredict
